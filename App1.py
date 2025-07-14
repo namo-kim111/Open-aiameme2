@@ -1,19 +1,9 @@
 import streamlit as st
 import requests
-import os
 
-# Hugging Face API 키 가져오기
 hf_token = st.secrets["hf_token"]
 headers = {"Authorization": f"Bearer {hf_token}"}
 
-import streamlit as st
-
-try:
-    st.write("불러온 토큰 앞 10자:", st.secrets["hf_token"][:10])
-except Exception as e:
-    st.error(f"secrets에서 토큰 불러오기 실패: {e}")
-    
-# 프롬프트 구성 함수
 def build_prompt(meme_name):
     return f"""
 너는 인터넷 밈을 잘 아는 AI야. 사용자가 '{meme_name}'이라는 밈 이름을 입력하면,
@@ -24,17 +14,19 @@ def build_prompt(meme_name):
 이 세 가지 항목으로 짧고 간결하게 설명해줘. 한국어로.
 """
 
-# 모델 API 호출 함수
 def query_huggingface_model(prompt):
     api_url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
     response = requests.post(api_url, headers=headers, json={"inputs": prompt})
     if response.status_code == 200:
         result = response.json()
-        return result[0]["generated_text"].split("유래")[0] + "유래" + result[0]["generated_text"].split("유래")[1]
+        # 그냥 전체 텍스트 반환, 예외처리도 추가
+        try:
+            return result[0]["generated_text"]
+        except Exception:
+            return str(result)
     else:
         return f"[에러] 상태 코드: {response.status_code}, 응답: {response.text}"
 
-# Streamlit UI
 st.set_page_config(page_title="AI 밈 설명기 (HuggingFace)", page_icon="🤖")
 st.title("🤖 HuggingFace 기반 AI 밈 설명기")
 st.write("AI가 밈의 뜻과 유래를 설명해드립니다!")
