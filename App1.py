@@ -6,6 +6,13 @@ import os
 hf_token = st.secrets["hf_token"]
 headers = {"Authorization": f"Bearer {hf_token}"}
 
+import streamlit as st
+
+try:
+    st.write("불러온 토큰 앞 10자:", st.secrets["hf_token"][:10])
+except Exception as e:
+    st.error(f"secrets에서 토큰 불러오기 실패: {e}")
+    
 # 프롬프트 구성 함수
 def build_prompt(meme_name):
     return f"""
