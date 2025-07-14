@@ -44,8 +44,8 @@ if st.button("설명 보기") and meme_input:
             st.text_area("밈 설명", explanation, height=250)
 
             # 📝 저장 (선택적 기능)
-            with open("meme_explanation.txt", "w", encoding="utf-8") as f:
-                f.write(explanation)
+           # with open("meme_explanation.txt", "w", encoding="utf-8") as f:
+             #   f.write(explanation)
 
         except Exception as e:
             st.error(f"에러 발생: {e}")
