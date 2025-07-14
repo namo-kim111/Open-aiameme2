@@ -1,11 +1,17 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 import os
 
-# 🔑 OpenAI API 키 설정 (직접 입력 or 환경변수 사용)
-openai.api_key = os.getenv("OPENAI_API_KEY") or "your-api-key-here"
+# 🔑 OpenAI API 키 설정 (환경변수나 secrets에서 읽기)
+api_key = os.getenv("OPENAI_API_KEY") or st.secrets.get("openai_api_key", None)
+if not api_key:
+    st.error("OpenAI API 키가 설정되지 않았습니다. 환경변수나 secrets에 넣어주세요.")
+    st.stop()
 
-# 💬 GPT에게 질문 보내는 함수
+# OpenAI 클라이언트 생성
+client = OpenAI(api_key=api_key)
+
+# 💬 GPT에게 질문 보내는 함수 (최신 문법)
 def explain_meme(meme_name):
     prompt = f"""
 너는 인터넷 밈을 잘 아는 AI야. 사용자가 '{meme_name}'이라는 밈 이름을 입력하면,
@@ -15,11 +21,11 @@ def explain_meme(meme_name):
 
 이 세 가지 항목으로 짧고 간결하게 설명해줘. 한국어로.
 """
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",  # 또는 "gpt-4"
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
-        max_tokens=500
+        max_tokens=500,
     )
     return response.choices[0].message.content.strip()
 
