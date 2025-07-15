@@ -15,7 +15,7 @@ def build_prompt(meme_name):
 """
 
 def query_huggingface_model(prompt):
-    api_url = "https://api-inference.huggingface.co/models/google/flan-t5-base"
+    api_url = "https://api-inference.huggingface.co/models/bigscience/bloom"
     response = requests.post(api_url, headers=headers, json={"inputs": prompt})
     if response.status_code == 200:
         result = response.json()
