@@ -41,3 +41,4 @@ if st.button("설명 보기") and meme_input:
 
 st.markdown("---")
 st.caption("제작: Open 에이아밈 + HuggingFace AI")
+st.write("🔐 받은 토큰:", hf_token[:6] + "..." if hf_token else "❌ 없음")
